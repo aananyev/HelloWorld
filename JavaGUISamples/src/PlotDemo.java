@@ -281,7 +281,8 @@ class HPanel extends Panel{
         setBackground(Color.LIGHT_GRAY);
 // Размер и положение панели:
         setBounds(x,y,W,H);
-        // Отключения менеджера размещения компонентов панели: setLayout(null);
+// Отключения менеджера размещения компонентов панели:
+        setLayout(null);
 // Метка для панели справки:
         L=new Label("СПРАВКА",Label.CENTER);
 // Размер и положение метки:
@@ -299,6 +300,7 @@ class HPanel extends Panel{
         add(TA);
     }
 }
+
 // Класс обработчика для первой кнопки:
 class Button1Pressed implements ActionListener{
 // Панель с кнопками:
@@ -318,6 +320,7 @@ class Button1Pressed implements ActionListener{
         P2.G.plot(P2.getGraphics());
     }
 }
+
 // Класс обработчика для второй кнопки:
 class Button2Pressed implements ActionListener{
 // Метод для обработки щелчка на кнопке:
@@ -326,6 +329,7 @@ class Button2Pressed implements ActionListener{
         System.exit(0);
     }
 }
+
 // Класс обработчика для флажка вывода сетки:
 class cbChanged implements ItemListener{
 // Список выбора цвета для сетки:
