@@ -10,6 +10,6 @@ public class JavaGUISamples {
         MyFrame frame = new MyFrame(100, 100);
         MyFrameAWT frameAWT=new MyFrameAWT(100,100);
 
-        new PlotFrame(400,500);
+        PlotFrame plotFrame = new PlotFrame(400, 500);
     }
 }
