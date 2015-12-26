@@ -12,26 +12,17 @@ class PlotFrame extends Frame {
     PlotFrame(int H, int W) {
 // Заголовок окна:
         setTitle("График функции");
-        setBounds(100, 50, W, H);                      // Положение и размер окна
-        setBackground(Color.GRAY);                  // Цвет фона окна
-        setLayout(null);                            // Отключение менеджера размещения элементов
-        Font f = new Font("Arial", Font.BOLD, 11);      // Определение шрифта
+        setBounds(100, 50, W, H);        // Положение и размер окна
+        setBackground(Color.GRAY);    // Цвет фона окна
+        setLayout(null);        // Отключение менеджера размещения элементов
+        Font f = new Font("Arial", Font.BOLD, 11);  // Определение шрифта
         setFont(f);
         BPanel BPnl = new BPanel(6, 25, W / 4, H - 30);
         add(BPnl);
 // Панель для отображения графика (создание):
-        final PPanel[] PPnl;
-        PPnl = new PPanel[1];
-        Thread  myThread = new Thread(new Runnable(){
-            public void run() {
-                PPnl[0] = new PPanel(W / 4 + 10, 25, 3 * W / 4 - 15, H - 120, BPnl);
-            }
-        });
-
-        add(PPnl[0]);
-        myThread.start();
+        PPanel PPnl = new PPanel(W / 4 + 10, 25, 3 * W / 4 - 15, H - 120, BPnl);
 // Добавление панели в главное окно:
-//        add(PPnl);
+        add(PPnl);
 // Третья панель для отображения справки:
         HPanel HPnl = new HPanel(W / 4 + 10, H - 90, 3 * W / 4 - 15, 85);
 // Добавление панели в главное окно:
@@ -40,10 +31,10 @@ class PlotFrame extends Frame {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ve) {
                 System.exit(0);
-            }                                       // Закрытие окна
+            }               // Закрытие окна
         });
 // Регистрация обработчика для первой кнопки:
-        BPnl.B1.addActionListener(new Button1Pressed(BPnl, PPnl[0]));
+        BPnl.B1.addActionListener(new Button1Pressed(BPnl, PPnl));
 // Регистрация обработчика для второй кнопки:
         BPnl.B2.addActionListener(new Button2Pressed());
 // Регистрация обработчика для флажка вывода сетки:
@@ -52,31 +43,34 @@ class PlotFrame extends Frame {
         setResizable(false);
 // Значок для окна программы:
         setIconImage(getToolkit().getImage("C:/icons/icon.png"));
+// Применение шрифта
+        // Создание панели с кнопками
+        // Добавление панели в главное окно
         setVisible(true);
     }
 }
 
 // Класс панели с кнопками:
 class BPanel extends Panel {
-// Метки панели:
+    // Метки панели:
     public Label[] L;
-// Группа переключателей панели:
+    // Группа переключателей панели:
     public CheckboxGroup CbG;
-// Переключатели панели:
+    // Переключатели панели:
     public Checkbox[] Cb;
-// Раскрывающийся список:
+    // Раскрывающийся список:
     public Choice Ch;
-// Текстовое поле:
+    // Текстовое поле:
     public TextField TF;
-// Кнопки панели:
+    // Кнопки панели:
     public Button B1, B2;
 
-// Конструктор
+    // Конструктор
 // (аргументы - координаты и размеры панели):
     BPanel(int x, int y, int W, int H) {
 // Отключение менеджера размещения элементов на панели:
         setLayout(null);
-        setBounds(x, y, W, H);                 // Положение и размер панели
+        setBounds(x, y, W, H);   // Положение и размер панели
         setBackground(Color.LIGHT_GRAY);    // Цвет фона панели
 // Массив меток:
         L = new Label[3];
@@ -101,6 +95,7 @@ class BPanel extends Panel {
         for(int i = 0; i < 4; i++) {
             Cb[i].setBounds(5, 30 + i * 25, getWidth() - 10, 30); // Размер
             add(Cb[i]);
+// Отображение окна
         }
 // Раскрывающийся список выбора цвета для линий сетки:
         Ch = new Choice();
@@ -138,11 +133,12 @@ class BPanel extends Panel {
         B1 = new Button("Нарисовать");
 // Вторая кнопка ("Закрыть"):
         B2 = new Button("Закрыть");
-// Размеры и положение первой кнопки
+// Размеры и положение первой кнопки:
         B1.setBounds(5, getHeight() - 75, getWidth() - 10, 30);
 // Размер и положение второй кнопки:
         B2.setBounds(5, getHeight() - 35, getWidth() - 10, 30);
-        add(B1); // Добавление первой кнопки на панель
+        add(B1);
+// Добавление первой кнопки на панель
         add(B2); // Добавление второй кнопки на панель
     }
 }
@@ -151,51 +147,60 @@ class BPanel extends Panel {
 class PPanel extends Panel {
     // Ссылка на объект реализации графика функции:
     public Plotter G;
+
     // Внутренний класс для реализации графика функции:
-    class Plotter{
+    class Plotter {
         // Границы диапазона изменения координат:
-        private double Xmin=0,Xmax,Ymin=0,Ymax=1.0;
+        private double Xmin = 0, Xmax, Ymin = 0, Ymax = 1.0;
         // Состояние флажка вывода сетки:
         private boolean status;
         // Цвет для линии графика:
         private Color clr;
         // Цвет для отображения линий сетки:
         private Color gclr;
+
         // Конструктор класса
 // (аргументы - панель с кнопками и панель для отображения графика):
-        Plotter(BPanel P){
+        Plotter(BPanel P) {
 // Считывание значения текстового поля и преобразование в число:
-            try{
-                Xmax=Double.valueOf(P.TF.getText());}
-            catch(NumberFormatException e){
+            try {
+                Xmax = Double.valueOf(P.TF.getText());
+            } catch(NumberFormatException e) {
                 P.TF.setText("10");
-                Xmax=10;}
-            status=P.Cb[3].getState();
+                Xmax = 10;
+            }
+            status = P.Cb[3].getState();
 // Определение цвета линий сетки:
-            switch(P.Ch.getSelectedIndex()){
+            switch(P.Ch.getSelectedIndex()) {
                 case 0:
-                    gclr=Color.GREEN;
+                    gclr = Color.GREEN;
                     break;
                 case 1:
-                    gclr=Color.YELLOW;
+                    gclr = Color.YELLOW;
                     break;
                 default:
-                    gclr=Color.GRAY;}
+                    gclr = Color.GRAY;
+            }
 // Цвет линии графика:
-            String name=P.CbG.getSelectedCheckbox().getLabel();
-            if(name.equalsIgnoreCase(" красный ")) clr=Color.RED;
-            else if(name.equalsIgnoreCase(" синий ")) clr=Color.BLUE;
-            else clr=Color.BLACK;
+            String name = P.CbG.getSelectedCheckbox().getLabel();
+            if(name.equalsIgnoreCase(" красный ")) clr = Color.RED;
+            else if(name.equalsIgnoreCase(" синий ")) clr = Color.BLUE;
+            else clr = Color.BLACK;
         }
+
         // Отображаемая на графике функция:
-        private double f(double x){
-            return (1+Math.sin(x))/(1+Math.abs(x));}
+        private double f(double x) {
+            return (1 + Math.sin(x)) / (1 + Math.abs(x));
+        }
+
         // Метод для считывания и запоминания настроек:
-        public Plotter remember(BPanel P){
-            return new Plotter(P);}
+        public Plotter remember(BPanel P) {
+            return new Plotter(P);
+        }
+
         // Метод для отображения графика и сетки
 // (Fig - объект графического контекста):
-       public void plot(Graphics Fig) throws InterruptedException {
+        public void plot(Graphics Fig) {
 // Параметры области отображения графика:
             int H, W, h, w, s = 20;
             H = getHeight();
@@ -205,22 +210,18 @@ class PPanel extends Panel {
 // Очистка области графика:
             Fig.clearRect(0, 0, W, H);
 // Индексная переменная и количество линий сетки:
-            int k, l, nums = 10;
+            int k, nums = 10;
 // Цвет координатных осей - черный:
             Fig.setColor(Color.BLACK);
 // Отображение координатных осей:
             Fig.drawLine(s, s, s, h + s);
             Fig.drawLine(s, s + h, s + w, s + h);
-
 // Отображение засечек и числовых значений на координатных осях:
             for(k = 0; k <= nums; k++) {
                 Fig.drawLine(s + k * w / nums, s + h, s + k * w / nums, s + h + 5);
                 Fig.drawLine(s - 5, s + k * h / nums, s, s + k * h / nums);
-            }
-
-            for(l = 0; l <= nums; l++) {
-                Fig.drawString(Double.toString(Xmin + l * (Xmax - Xmin) / nums), s + l * w / nums - 5, s + h + 15);
-                Fig.drawString(Double.toString(Ymin + l * (Ymax - Ymin) / nums), s - 17, s + h - 1 - l * h / nums);
+                Fig.drawString(Double.toString(Xmin + k * (Xmax - Xmin) / nums), s + k * w / nums - 5, s + h + 15);
+                Fig.drawString(Double.toString(Ymin + k * (Ymax - Ymin) / nums), s - 17, s + h - 1 - k * h / nums);
             }
 // Отображение сетки (если установлен флажок):
             if(status) {
@@ -228,44 +229,42 @@ class PPanel extends Panel {
 // Отображение линий сетки:
                 for(k = 1; k <= nums; k++) {
                     Fig.drawLine(s + k * w / nums, s, s + k * w / nums, h + s);
-                    Thread.currentThread().sleep(100);
                     Fig.drawLine(s, s + (k - 1) * h / nums, s + w, s + (k - 1) * h / nums);
                 }
             }
 // Отображение графика:
             Fig.setColor(clr); // Установка цвета линии
-// Масштаб на один пиксель по каждой из координат:
-        double dx=(Xmax-Xmin)/w,dy=(Ymax-Ymin)/h;
-// Переменные для записи декартовых координат:
-            double x1,x2,y1,y2;
-// Переменные для записи координат в окне отображения графика:
-        int h1,h2,w1,w2;
+            // Масштаб на один пиксель по каждой из координат:
+            double dx = (Xmax - Xmin) / w, dy = (Ymax - Ymin) / h;
+            // Переменные для записи декартовых координат:
+            double x1, x2, y1, y2;
+            // Переменные для записи координат в окне отображения графика:
+            int h1, h2, w1, w2;
 // Начальные значения:
-        x1=Xmin;
-        y1=f(x1);
-        w1=s;
-        h1=h+s-(int)Math.round(y1/dy);
-// Отображение базовых точек и соединение их линиями:
-                    int step = 5;
-
-                    for(int i = step; i <= w; i += step) {
-                        x2 = i * dx;
-                        y2 = f(x2);
-                        w2 = s + (int) Math.round(x2 / dx);
-                        h2 = h + s - (int) Math.round(y2 / dy);
+            x1 = Xmin;
+            y1 = f(x1);
+            w1 = s;
+            h1 = h + s - (int) Math.round(y1 / dy);
+            // Шаг в пикселях для базовых точек:
+            int step = 5;
+            // Отображение базовых точек и соединение их линиями:
+            for(int i = step; i <= w; i += step) {
+                x2 = i * dx;
+                y2 = f(x2);
+                w2 = s + (int) Math.round(x2 / dx);
+                h2 = h + s - (int) Math.round(y2 / dy);
 // Линия:
-                        Fig.drawLine(w1, h1, w2, h2);
-                        Thread.sleep(200);
+                Fig.drawLine(w1, h1, w2, h2);
 // Базовая точка (квадрат):
-                        Fig.drawRect(w1 - 2, h1 - 2, 4, 4);
+                Fig.drawRect(w1 - 2, h1 - 2, 4, 4);
 // Новые значения для координат:
-                        x1 = x2;
-                        y1 = y2;
-                        w1 = w2;
-                        h1 = h2;
-                    }
-                }
+                x1 = x2;
+                y1 = y2;
+                w1 = w2;
+                h1 = h2;
+            }
         }
+    }
 
     // Конструктор панели
 // (аргументы - координаты и размеры панели,
@@ -283,11 +282,7 @@ class PPanel extends Panel {
     public void paint(Graphics g) {
 // При перерисовке панели вызывается метод
 // для отображения графика:
-        try {
-            G.plot(g);
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        }
+        G.plot(g);
     }
 }
 
@@ -343,11 +338,7 @@ class Button1Pressed implements ActionListener {
 // Обновление параметров (настроек) для отображения графика:
         P2.G = P2.G.remember(P1);
 // Реакция на щелчок (прорисовка графика):
-        try {
-            P2.G.plot(P2.getGraphics());
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-        }
+        P2.G.plot(P2.getGraphics());
     }
 }
 
@@ -373,6 +364,6 @@ class cbChanged implements ItemListener {
     // Метод для обработки изменения состояния флажка:
     public void itemStateChanged(ItemEvent ie) {
 // Реакция на изменение состояния флажка:
-        ch.setEnabled(ie.getStateChange() == ItemEvent.SELECTED);
+        ch.setEnabled(ie.getStateChange() == ie.SELECTED);
     }
 }
