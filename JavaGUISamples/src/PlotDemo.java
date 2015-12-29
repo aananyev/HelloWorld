@@ -12,10 +12,10 @@ class PlotFrame extends Frame {
     PlotFrame(int H, int W) {
 // Заголовок окна:
         setTitle("График функции");
-        setBounds(100, 50, W, H);        // Положение и размер окна
-        setBackground(Color.GRAY);    // Цвет фона окна
-        setLayout(null);        // Отключение менеджера размещения элементов
-        Font f = new Font("Arial", Font.BOLD, 11);  // Определение шрифта
+        setBounds(100, 50, W, H); // Положение и размер окна
+        setBackground(Color.GRAY); // Цвет фона окна
+        setLayout(null); // Отключение менеджера размещения элементов
+        Font f = new Font("Arial", Font.BOLD, 11); // Определение шрифта
         setFont(f);
         BPanel BPnl = new BPanel(6, 25, W / 4, H - 30);
         add(BPnl);
@@ -31,7 +31,7 @@ class PlotFrame extends Frame {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ve) {
                 System.exit(0);
-            }               // Закрытие окна
+            } // Закрытие окна
         });
 // Регистрация обработчика для первой кнопки:
         BPnl.B1.addActionListener(new Button1Pressed(BPnl, PPnl));
@@ -44,8 +44,8 @@ class PlotFrame extends Frame {
 // Значок для окна программы:
         setIconImage(getToolkit().getImage("C:/icons/icon.png"));
 // Применение шрифта
-        // Создание панели с кнопками
-        // Добавление панели в главное окно
+// Создание панели с кнопками
+// Добавление панели в главное окно
         setVisible(true);
     }
 }
@@ -70,8 +70,8 @@ class BPanel extends Panel {
     BPanel(int x, int y, int W, int H) {
 // Отключение менеджера размещения элементов на панели:
         setLayout(null);
-        setBounds(x, y, W, H);   // Положение и размер панели
-        setBackground(Color.LIGHT_GRAY);    // Цвет фона панели
+        setBounds(x, y, W, H); // Положение и размер панели
+        setBackground(Color.LIGHT_GRAY); // Цвет фона панели
 // Массив меток:
         L = new Label[3];
 // Текстовая метка:
@@ -87,7 +87,7 @@ class BPanel extends Panel {
         Cb = new Checkbox[4];
 // Переключатели группы:
         Cb[0] = new Checkbox(" красный ", CbG, true); // Красный
-        Cb[1] = new Checkbox(" синий ", CbG, false);  // Синий
+        Cb[1] = new Checkbox(" синий ", CbG, false); // Синий
         Cb[2] = new Checkbox(" черный ", CbG, false); // Черный
 // Флажок вывода сетки:
         Cb[3] = new Checkbox(" Сетка ", true);
@@ -234,20 +234,20 @@ class PPanel extends Panel {
             }
 // Отображение графика:
             Fig.setColor(clr); // Установка цвета линии
-            // Масштаб на один пиксель по каждой из координат:
+// Масштаб на один пиксель по каждой из координат:
             double dx = (Xmax - Xmin) / w, dy = (Ymax - Ymin) / h;
-            // Переменные для записи декартовых координат:
+// Переменные для записи декартовых координат:
             double x1, x2, y1, y2;
-            // Переменные для записи координат в окне отображения графика:
+// Переменные для записи координат в окне отображения графика:
             int h1, h2, w1, w2;
 // Начальные значения:
             x1 = Xmin;
             y1 = f(x1);
             w1 = s;
             h1 = h + s - (int) Math.round(y1 / dy);
-            // Шаг в пикселях для базовых точек:
+// Шаг в пикселях для базовых точек:
             int step = 5;
-            // Отображение базовых точек и соединение их линиями:
+// Отображение базовых точек и соединение их линиями:
             for(int i = step; i <= w; i += step) {
                 x2 = i * dx;
                 y2 = f(x2);
