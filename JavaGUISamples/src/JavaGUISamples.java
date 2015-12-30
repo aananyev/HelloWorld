@@ -7,13 +7,12 @@ import java.util.Random;
 
 public class JavaGUISamples {
     public static void main(String args[]) {
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println("Размер экрана:" + dim + dim.height + dim.width);
+        String[] nameOfSample = {"Простое окно", "Простое окно 1", "График функции"};
 // Создание первого о
 //        MyFrame frame = new MyFrame(100, 100);
 //        MyFrameAWT frameAWT=new MyFrameAWT(100,100);
 
 //        new PlotFrame(400, 500);
-        new SamplePanelFrame(400, 300);
+        new SamplePanelFrame(400, 250, nameOfSample);
     }
 }
