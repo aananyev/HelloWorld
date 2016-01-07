@@ -9,8 +9,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 class SamplePanelFrame extends Frame {
-    CheckPanel checkPanel;
     public String[] nameOfSample;
+    CheckPanel checkPanel;
 
     SamplePanelFrame(int x, int y, String[] samples) {
         int winXPos, winYPos, winXSize = x, winYSize = y;
@@ -47,7 +47,6 @@ class SamplePanelFrame extends Frame {
     }
 
     class btnOKPressed implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
             String choiseAtSample = checkPanel.choiseSample.getSelectedCheckbox().getLabel();
             System.out.println("Choised:" + choiseAtSample);
@@ -58,11 +57,12 @@ class SamplePanelFrame extends Frame {
                 new MyFrameAWT(100, 100);
             else if(choiseAtSample == nameOfSample[2])
                 new PlotFrame(400, 500);
+            else if(choiseAtSample == nameOfSample[3])
+                new CalculatorFrame();
         }
     }
 
     class btnCancelPressed implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
@@ -73,7 +73,6 @@ class CheckPanel extends Panel {
     public CheckboxGroup choiseSample;
     public Checkbox[] sampleNameCB;
     public Button btnOK, btnCancel;
-//    public String[] nameOfSample = {"Простое окно", "Простое окно 1", "График функции"};
 
     CheckPanel(int x, int y, int widthCP, int heightCP, String[] samples) {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -84,19 +83,13 @@ class CheckPanel extends Panel {
         setBackground(Color.gray);
 
         choiseSample = new CheckboxGroup();
-        sampleNameCB = new Checkbox[3];
+        sampleNameCB = new Checkbox[4];
 // сформировать чекбокс
-        sampleNameCB[0] = new Checkbox(samples[0], choiseSample, true);
-        sampleNameCB[1] = new Checkbox(samples[1], choiseSample, false);
-        sampleNameCB[2] = new Checkbox(samples[2], choiseSample, false);
-// размер чекбокса
-        sampleNameCB[0].setBounds(100, 50, 200, 30);
-        sampleNameCB[1].setBounds(100, 80, 200, 30);
-        sampleNameCB[2].setBounds(100, 110, 200, 30);
-// вставить в панель
-        add(sampleNameCB[0]);
-        add(sampleNameCB[1]);
-        add(sampleNameCB[2]);
+        for(int i = 0; i < samples.length; i++) {
+            sampleNameCB[i] = new Checkbox(samples[i], choiseSample, i == 0);
+            sampleNameCB[i].setBounds(100, 50 + i * 30, 200, 30);
+            add(sampleNameCB[i]);
+        }
 // кнопки
         btnOK = new Button("OK");
         btnCancel = new Button("Cancel");
